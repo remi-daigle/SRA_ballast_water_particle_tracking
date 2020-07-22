@@ -29,7 +29,7 @@ c     &'/home4/tmp/Lobster_IML_2006.bio_output_particles',
 c     &'/home4/tmp/Lobster_IML2_1996.bio_output_particles',
 c     &'/home4/tmp/Lobster_IML_2004_swim18.bio_output_particles',
 c    &'/home4/tmp/Lobster_IML_2006_swim18.bio_output_particles',
-     &'../Run/OUT/Test_bio.bio_output_particles',
+     &'Run/OUT/Test_bio.bio_output_particles',
      &        form='unformatted',status='old')
       
 c-----------------------------------------------------------------------

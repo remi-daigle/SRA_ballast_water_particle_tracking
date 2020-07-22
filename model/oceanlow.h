@@ -2,7 +2,7 @@
 !
       integer m,n,ilo,ilop1,nz,mz
       integer*2 land,water,ucalc,vcalc,zcalc,copyfrom,contract
-      parameter(m=197,n=234,ilo=46)
+      parameter(m=393,n=467,ilo=46)
       parameter(ilop1=ilo+1)
       parameter(land=0, water=1, zcalc=2,ucalc=4,vcalc=8,copyfrom=16)
       parameter (contract=32)

@@ -1,7 +1,7 @@
 c
 c-----------------------------------------------------------------------
-      open(1,file='part_loc.ll',status='old')
-      open(2,file='part_loc.xy')
+      open(1,file='track/part_loc.ll',status='old')
+      open(2,file='track/part_loc.xy')
 c   
       DO
         read(1,*,end=999)rlon,rlat

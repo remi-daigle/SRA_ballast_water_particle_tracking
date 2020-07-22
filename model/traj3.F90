@@ -2,15 +2,15 @@
 
       include 'ocean.h'
       integer ipart,i,k,j,istep
-      real stage, buf_stage
-      dimension stage(300),buf_stage(300)
+      real stage, buf_stage, h,x
+      dimension stage(16000),buf_stage(16000)
       common /stagedata/ stage, buf_stage
       character*50 behaveparam
       character*180 filenom2
 
 !
       CALL get_command_argument(1,behaveparam)
-!          open(66,file='../Run/behav_param3')
+!          open(66,file='Run/behav_param3')
 !          read(66,*)behaveparam
 !          close(66)
 
@@ -23,9 +23,10 @@
 !-----------------------------------------------------------------------
       dt2 = 2.*dt
 !
-      open (49, file='input_particles')
+!      open (49, file='input_particles')
+      open (49, file="Run/IN/input_"//behaveparam)
 !      open (51,file=archive(1:lenstr(archive))//'.output_particles',form='unformatted')
-      filenom2="OUT/"//behaveparam
+      filenom2="/fs/isi-nas1/dfo/bioios/dfo_bioios/dar002/RAW/"//behaveparam
       open(51,file=filenom2,form='unformatted')
 !
       ipart = 1
@@ -38,6 +39,7 @@
       close(49)
 !
       print*,'Number of particles (npart)= ',npart
+      print*,'xpo',(xpo(ipart),ipart=1,16000)
       !print*,'test stage',stage
 !
 !-----------------------------------------------------------------------
@@ -126,36 +128,23 @@
       integer iadcp,adcp_z,astep,kt
       real ADCP_x(5),ADCP_y(5)
       real adcp_u,adcp_v,adcp_w
-      real stage, buf_stage
-      dimension stage(300),buf_stage(300), stage_old(300)
-      common /stagedata/ stage, buf_stage, stage_old
-      logical lobster
       character*50 behaveparam
 !
       CALL get_command_argument(1,behaveparam)
 !-------------------------------------------------------------------------------------------
-          open(66,file='../Run/bp/1_'//behaveparam)
+          open(66,file='Run/bp/1_'//behaveparam)
           read(66,*)iyear1,imonth1,iday1,iyear2,imonth2,iday2,hour1,minute1,second1,swim,sv,Kdiff,behav,uzl,lzl,modelres
           close(66)
-!extract "ADCP" comparable data use "2009	7	10	2009	8	23	0	0	0	0	0	0	a	0	100	h" in behave_table and 43 days in make_input.f
-      lobster=.FALSE.
-      if(behav.eq.'l0a'.or.behav.eq.'l1a'.or.behav.eq.'l2a'.or.behav.eq.'l3a'.or.behav.eq.'l4a'.or.&
-      behav.eq.'l0b'.or.behav.eq.'l1b'.or.behav.eq.'l2b'.or.behav.eq.'l3b'.or.behav.eq.'l4b'.or.&
-      behav.eq.'l0c'.or.behav.eq.'l1c'.or.behav.eq.'l2c'.or.behav.eq.'l3c'.or.behav.eq.'l4c'.or.&
-      behav.eq.'l0d'.or.behav.eq.'l1d'.or.behav.eq.'l2d'.or.behav.eq.'l3d'.or.behav.eq.'l4d') lobster=.TRUE.
-      
-	  if(behav.eq.'l5a'.or.behav.eq.'l6a'.or.behav.eq.'l7a'.or.behav.eq.'l8a'.or.&
-      behav.eq.'l9a') lobster=.TRUE.
 
-      if(behav.eq.'a')then
+          if(behav.eq.'a')then
           if(modelres.eq."l") then
-        	  open(81,file='../ADCP/ADCP_low')
+        	  open(81,file='ADCP/ADCP_high')
           else
-        	  open(81,file='../ADCP/ADCP_high')
+        	  open(81,file='ADCP/ADCP_high')
           end if
           read(81,*)ADCP_y,ADCP_x
           close(81)
-        open(82,file='../ADCP/ADCPdata',POSITION="APPEND")
+        open(82,file='ADCP/ADCPdata',POSITION="APPEND")
         do iadcp=1,5
           do adcp_z=1,25
             astep=kstep
@@ -179,15 +168,13 @@
 
  	  b_year=time(6)		    				!Remi
           b_month=time(5)	    					!Remi
-          b_d=time(4)-1		    					!Remi
-          b_h=time(3)+1
+          b_d=time(4)		    					!Remi
+          b_h=time(3)
           b_m=time(2)		    					!Remi
           b_s=time(1)		    					!Remi
 
 !          print*,'swim,sv,Kdiff,behav,lzl,uzl=',swim,sv,Kdiff,behav,lzl,uzl
-          daynight=1
-          ebbflood=1
-
+          daynight=1.
 !
 ! daynight
 
@@ -199,57 +186,62 @@
 
 !
 ! ebbflood
-          IF (behav=='t'.AND.b_month==7) THEN
+          IF (behav=='t'.AND.b_month==1) THEN
                  b_dd=b_d-1
-          ELSEIF (behav=='t'.AND.b_month==8) THEN
+          ELSEIF (behav=='t'.AND.b_month==2) THEN
                  b_dd=b_d+31-1
+          ELSEIF (behav=='t'.AND.b_month==3) THEN
+                 b_dd=b_d+59-1
+          ELSEIF (behav=='t'.AND.b_month==4) THEN
+                 b_dd=b_d+90-1
+          ELSEIF (behav=='t'.AND.b_month==5) THEN
+                 b_dd=b_d+120-1
+          ELSEIF (behav=='t'.AND.b_month==6) THEN
+                 b_dd=b_d+151-1
+          ELSEIF (behav=='t'.AND.b_month==7) THEN
+                 b_dd=b_d+181-1
+          ELSEIF (behav=='t'.AND.b_month==8) THEN
+                 b_dd=b_d+212-1
           ELSEIF (behav=='t'.AND.b_month==9) THEN
-                 b_dd=b_d+62-1
+                 b_dd=b_d+243-1
           ELSEIF (behav=='t'.AND.b_month==10) THEN
-	         b_dd=b_d+92-1
-	  ELSEIF (behav=='t') THEN
-	         write(*,*)'error: month not compatible with behaviour submodel. month=',b_month
-	  END IF
-!
-!
-	  IF (behav=='t'.AND.b_year==2010) THEN
-	         b_dh=b_dd*24+7.648+b_h+(b_m/60)+(b_s/3600)+3
-	  ELSEIF (behav=='t'.AND.b_year==2009) THEN
-	         b_dh=b_dd*24+4.915+b_h+(b_m/60)+(b_s/3600)+3
-	  ELSEIF (behav=='t'.AND.b_year==2008) THEN
-	         b_dh=b_dd*24+8.065+b_h+(b_m/60)+(b_s/3600)+3
+                 b_dd=b_d+273-1
+          ELSEIF (behav=='t'.AND.b_month==11) THEN
+                 b_dd=b_d+304-1
+          ELSEIF (behav=='t'.AND.b_month==12) THEN
+                 b_dd=b_d+334-1
+	    ELSEIF (behav=='t') THEN
+	           write(*,*)'error: month not compatible with behaviour submodel. month=',b_month
+	    END IF
+
+! set cycle relative to first high tide of the year (using historical Halifax records)
+! http://uhslc.soest.hawaii.edu/data/?fd#uh275
+	  IF (behav=='t'.AND.b_year==2009) THEN
+               b_dh=b_dd*24+b_h-3
+        ELSEIF (behav=='t'.AND.b_year==2010) THEN
+               b_dh=b_dd*24+b_h-12
+        ELSEIF (behav=='t'.AND.b_year==2011) THEN
+               b_dh=b_dd*24+b_h-9
+        ELSEIF (behav=='t'.AND.b_year==2012) THEN
+               b_dh=b_dd*24+b_h-5
+        ELSEIF (behav=='t'.AND.b_year==2013) THEN
+               b_dh=b_dd*24+b_h-2
+        ELSEIF (behav=='t'.AND.b_year==2014) THEN
+               b_dh=b_dd*24+b_h-12
 	  ELSEIF (behav=='t') THEN
 	         write(*,*)'error: year not compatible with behaviour submodel. year=',b_year
 	  END IF
-!
+
           cc=2*3.141592653589793238462643383279502884197169399375/12.42
-!          IF (cos(cc*b_dh)>0) THEN
-!	  	ebbflood=1.						!ebbflood=1 if flooding
-!	  ELSE
-!		ebbflood=-1.						!ebbflood=-1 if ebbing
-!	  END IF
-          ebbflood=cos(cc*b_dh)
+          IF (behav=='t'.AND.cos(cc*b_dh)<0) THEN
+	  	ebbflood=1.						!ebbflood=1 if flooding
+	  ELSEIF (behav=='t') THEN
+		ebbflood=-1.						!ebbflood=-1 if ebbing
+	  END IF
+!          ebbflood=cos(cc*b_dh)
+
 !
 !
-
-
-         if(lobster.eqv..TRUE.) then          
-		 if(modelres.eq."h") then
-		    rownum=final*8-1
-		  else
-		    rownum=final-1
-		  end if
-                  if(kstep.gt.9.and.mod(kstep,2).lt.0.5) then
-		    open(79,file='../Run/stage/stages'//behaveparam,POSITION="APPEND")
-		    write(79,*)stage
-		    close(79)
-                    print*,'testing append ','true'
-                  else
-                    print*,'testing append ','false'
-                  end if
-		  print*,'testing stage',stage(1:5)
-         end if
-         !print*,'test local time & tidal',b_d,b_h+3,ebbflood
 !
 !         ------------------------------------------------------------
 !
@@ -257,1018 +249,20 @@
 !
 !         ------------------------------------------------------------
 !
-!! lobster temperature dependant submodel 'l0a'
-         if(behav.eq.'l0a'.and.kstep.gt.9) then
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l0b'
-         if(behav.eq.'l0b'.and.kstep.gt.9) then
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l1a'
-         if(behav.eq.'l1a'.and.kstep.gt.9) then
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l1b'
-         if(behav.eq.'l1b'.and.kstep.gt.9) then
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l2a'
-         if(behav.eq.'l2a'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l2b'
-         if(behav.eq.'l2b'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l3a'
-         if(behav.eq.'l3a'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=6
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=9
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l3b'
-         if(behav.eq.'l3b'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=6
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=9
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l4a'
-         if(behav.eq.'l4a'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l4b'
-         if(behav.eq.'l4b'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l0c'
-         if(behav.eq.'l0c'.and.kstep.gt.9) then
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l0d'
-         if(behav.eq.'l0d'.and.kstep.gt.9) then
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l1c'
-         if(behav.eq.'l1c'.and.kstep.gt.9) then
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l1d'
-         if(behav.eq.'l1d'.and.kstep.gt.9) then
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l2c'
-         if(behav.eq.'l2c'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l2d'
-         if(behav.eq.'l2d'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l3c'
-         if(behav.eq.'l3c'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=6
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=9
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l3d'
-         if(behav.eq.'l3d'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=6
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=9
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l4c'
-         if(behav.eq.'l4c'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(0.4*24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
-!! lobster temperature dependant submodel 'l4d'
-         if(behav.eq.'l4d'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  17
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=15
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=7
-                 lob_lzl=15
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-
+!
 		  
-		  !! lobster temperature dependant submodel 'l5a'
-         if(behav.eq.'l5a'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 		  if(ipart.lt.3) print*,'test ttemp',ipart,tempp
-
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=0
-                 lob_lzl=1
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-		  
-		  
-		  		  !! lobster temperature dependant submodel 'l6a'
-         if(behav.eq.'l6a'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 		  if(ipart.lt.3) print*,'test ttemp',ipart,tempp
-
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=5
-                 lob_lzl=6
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=5
-                 lob_lzl=6
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=5
-                 lob_lzl=6
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=5
-                 lob_lzl=6
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-		  
-		  		  !! lobster temperature dependant submodel 'l7a'
-         if(behav.eq.'l7a'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 		  if(ipart.lt.3) print*,'test ttemp',ipart,tempp
-
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=10
-                 lob_lzl=11
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=10
-                 lob_lzl=11
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=10
-                 lob_lzl=11
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=10
-                 lob_lzl=11
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-		  
-		  		  !! lobster temperature dependant submodel 'l8a'
-         if(behav.eq.'l8a'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 		  if(ipart.lt.3) print*,'test ttemp',ipart,tempp
-
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=15
-                 lob_lzl=16
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=15
-                 lob_lzl=16
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=15
-                 lob_lzl=16
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=15
-                 lob_lzl=16
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-		  
-		  		  !! lobster temperature dependant submodel 'l9a'
-         if(behav.eq.'l9a'.and.kstep.gt.9) then
-                 IF (b_h>(6-3).AND.b_h<(18-3)) THEN             !local time minus 3 (GMT vs ADT)
-          	       daynight=1.						!daynight=1 if day
-                 ELSEIF (behav=='d') THEN
-        	       daynight=-1.						!daynight=-1 if night
-	         END IF 
-                 rdm=1
-                 if(gasdev2().lt.0) rdm=-1 
-		 tempp =  value(temp,m,n,ilo,'s',xpo(ipart),ypo(ipart),zpo(ipart))
-		 		  if(ipart.lt.3) print*,'test ttemp',ipart,tempp
-
-		 if(stage(ipart).ge.1.and.stage(ipart).lt.2) then
-		 stage(ipart)=stage(ipart)+1/(24*(851*(tempp-0.84)**(-1.91)))
-                 lob_uzl=20
-                 lob_lzl=21
-		 swim_lob=0.1844828107*10*rdm
-                 sv=0.0336154396*10
-		 elseif(stage(ipart).ge.2.and.stage(ipart).lt.3) then
-		 stage(ipart)=stage(ipart)+1/(24*(200*(tempp-4.88)**(-1.47)))
-                 lob_uzl=20
-                 lob_lzl=21
-		 swim_lob=0.088009247*10*rdm
-                 sv=0.0351443448*10
-		 elseif(stage(ipart).ge.3.and.stage(ipart).lt.4) then
-		 stage(ipart)=stage(ipart)+1/(24*(252*(tempp-5.30)**(-1.45)))
-                 lob_uzl=20
-                 lob_lzl=21
-		 swim_lob=0.0751676396*10*rdm
-                 sv=0.0289636519*10
-		 elseif(stage(ipart).ge.4.and.stage(ipart).lt.5) then
-		 stage(ipart)=stage(ipart)+1/(24*(703.5*(tempp)**(-1.26)))
-                 lob_uzl=20
-                 lob_lzl=21
-		 swim_lob=0.3408846614*10*rdm
-                 sv=0.1368756067*10
-		 elseif(stage(ipart).ge.5) then
-		 stage(ipart)=5  !! stage 5 means it's settled!
-		 else
-		 print*,'if lobster stage loop error',stage(ipart);stage(ipart)=stage_old(ipart)
-		 end if
-          end if
-		  
-!  store old stage
-		  
-		  stage_old=stage
-!! enforce lobster depth limits
-          if(zpo(ipart).lt.lob_uzl) swim_lob=abs(swim_lob)
-          if(zpo(ipart).gt.lob_lzl) swim_lob=-abs(swim_lob)
 
 ! set swimming velocity
         rdm=1
-        if(behav.eq.'r'.and.gasdev2().lt.0) rdm=-1
-        if(lobster.eqv..FALSE.) swimming=(swim*daynight*ebbflood*rdm+sv*gasdev2())*dt/1000.
-        if(lobster.eqv..TRUE.) swimming=(swim_lob+sv*gasdev2())*dt/1000.
-        if(ipart.eq.1) print*,'test swimming=',swimming,'swim=',swim_lob,'zpo(ipart)=',zpo(ipart)!,tempp,floor(stage(ipart))
-!        if(ipart.eq.1) print*,'test swimming=',swimming,swim,daynight,ebbflood,rdm,sv,dt,gasdev2()
+        if(behav.eq.'r'.and.gasdev3().lt.0) rdm=-1
+!        ebbflood=1.
+!        h=value2D(height,m,n,'height',NINT(xpo(ipart)),NINT(ypo(ipart)))
+!        if(ipart.eq.1) print*,'test height=',h
+!        if(behav.eq.'t'.and.h.lt.0) ebbflood=-1.
+        swimming=(swim*daynight*ebbflood*rdm+sv*gasdev3())*dt/1000.
+!        if(ipart.eq.1) print*,'test swimming=',swimming,swim,daynight,ebbflood,rdm,sv,dt,gasdev3()
         if(behav.eq.'n') swimming=0
+        if(ipart.eq.1) print*,'test swimming=',swimming,swim,daynight,ebbflood
         i=int(xpo(ipart))+1
         k=int(ypo(ipart))+1
         kstep_diff = kstep - istart_part(ipart)
@@ -1301,6 +295,7 @@
           wp = -value(w,m,n,ilo,'w',xpo(ipart),ypo(ipart),zpo(ipart))
 ! WARNING: wp=0.
            wp=0.
+
 !
 
           xk1(ipart  ) = dt2*up/dlx(i,k)
@@ -1326,12 +321,12 @@
 !
             xp_temp = xpo(ipart)+( xk1(ipart)+2.*xk2(ipart)+2.*xk3(ipart)+xk4(ipart))/6.
             !Random walk
-            xdiffusion=Gasdev2()*(1./dlx(i,k))*(2.*Kdiff*dt2)**.5
+            xdiffusion=gasdev3()*(1./dlx(i,k))*(2.*Kdiff*dt2)**.5
             xp_temp=xp_temp+xdiffusion
 !
             yp_temp = ypo(ipart)+( yk1(ipart)+2.*yk2(ipart)+2.*yk3(ipart)+yk4(ipart))/6.
             !Random walk
-            ydiffusion=Gasdev2()*(1./dly(i,k))*(2.*Kdiff*dt2)**.5
+            ydiffusion=gasdev3()*(1./dly(i,k))*(2.*Kdiff*dt2)**.5
             yp_temp=yp_temp+ydiffusion
 !
 !            zp_temp = zpo(ipart)+( zk1(ipart)+2.*zk2(ipart)+2.*zk3(ipart)+zk4(ipart))/6.+2.*swimming
@@ -1361,12 +356,6 @@
           end if
           !if(ipart.eq.1) print*,'test uzl and lzl',uzl,lzl,zp_temp,zpo(ipart),swimming,zp_temp-zpo(ipart)
 
-!-----------------------------------------------------------------------		  
-		  !! enforce lobster depth limits
-          if(zp_temp.lt.lob_uzl) zp_temp=lob_uzl
-          if(zp_temp.gt.lob_lzl) zp_temp=lob_lzl
-          if(ipart.eq.1) print*,'test lob_uzl and lzl',lob_uzl,lob_lzl,zp_temp,zpo(ipart)
-
 !-----------------------------------------------------------------------
 !            move only particles if underwater
           if(zp_temp.lt.0) then
@@ -1385,14 +374,21 @@
                ypo(ipart) = yp_temp
                zpo(ipart) = zp_temp
           else
-               if(ipart.eq.1) print*,'particle not wet'
+               if(ipart.eq.1) print*,'particle not wet',zp_temp,real_depth
+!               xpo(ipart) = xp_temp
+!               ypo(ipart) = yp_temp
+!               zpo(ipart) = 0.0
+               
           endif
+          if(ipart.eq.1) print*,xpo(ipart)
 
 
 !-----------------------------------------------------------------------
             up =  value(u,m,n,ilo,'u',xpo(ipart),ypo(ipart),zpo(ipart))
             vp =  value(v,m,n,ilo,'v',xpo(ipart),ypo(ipart),zpo(ipart))
             wp = -value(w,m,n,ilo,'w',xpo(ipart),ypo(ipart),zpo(ipart))
+
+            !if(ipart.eq.1) print*,'test tides=','b_dh',b_dh,'up',up,'vp',vp,'wp',wp
 !
 ! WARNING: wp=0.
            wp=0.
@@ -1453,11 +449,6 @@
           endif
         endif
       enddo
-          if(lobster.eqv..TRUE.) then
-	     ! open(79,file='../Run/stages_temp')
-	     ! write(79,*)stage
-	     ! close(79)
-          endif
       return
       end
 
@@ -1671,7 +662,7 @@
 ! Returns a normally distibuted deviate with zero mean and
 ! unit variance using ran as a source of uniform deviates
 ! Joel: Modified from Gasdev. Ran has problem
-      REAL gasdev2
+      REAL gasdev3
       INTEGER iset
       REAL fac,gset,rsq,v1,v2 !use ran() intrinsic
       SAVE iset,gset
@@ -1683,10 +674,43 @@
         if(rsq.ge.1..or.rsq.eq.0.)goto 1
         fac=sqrt(-2.*log(rsq)/rsq)
         gset=v1*fac
-        gasdev2=v2*fac
+        gasdev3=v2*fac
         iset=1
       else
         gasdev2=gset
+        iset=0
+      endif
+      return
+      END
+!  (C) Copr. 1986-92 Numerical Recipes Software 2*$.
+
+      FUNCTION gasdev3()
+       use ifport !for use with ifort
+! Joel: Modified from Gasdev. Ran has problem
+      REAL gasdev3
+      INTEGER iset
+      REAL fac,gset,rsq,v1,v2,r1,r2 !use ran() intrinsic
+      logical first
+      SAVE iset,gset,first
+      DATA iset/0/
+      data first/.true./
+      if(first) then
+          call random_seed()  !For use with latest version of PGI. Static seed
+          first=.false.
+      endif
+      if (iset.eq.0) then
+1       call random_number(r1)  !new version for latest PGI FORTRAN Compiler
+        call random_number(r2)
+        v1=2.*r1-1.
+        v2=2.*r2-1.
+        rsq=v1**2+v2**2
+        if(rsq.ge.1..or.rsq.eq.0.)goto 1
+        fac=sqrt(-2.*log(rsq)/rsq)
+        gset=v1*fac
+        gasdev3=v2*fac
+        iset=1
+      else
+        gasdev3=gset
         iset=0
       endif
       return

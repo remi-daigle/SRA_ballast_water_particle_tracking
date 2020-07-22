@@ -1,0 +1,44 @@
+[2020-06-10 00:42:11,088] [INFO] [run] job information
+[2020-06-10 00:42:11,088] [INFO] [run] ---------------
+[2020-06-10 00:42:11,088] [INFO] [run] jobid: 447820
+[2020-06-10 00:42:11,088] [INFO] [run] nslots: 1
+[2020-06-10 00:42:11,089] [INFO] [run] ncpus[0]: 1
+[2020-06-10 00:42:11,089] [INFO] [run] memory[0]: 8388608000
+[2020-06-10 00:42:11,089] [INFO] [run] tmpfs[0]: 4194304000
+[2020-06-10 00:42:11,089] [INFO] [run] image[0]: dfo/dfo_all_grdi_centos-6-amd64_latest
+[2020-06-10 00:42:11,089] [INFO] [run] wallclock: 21480
+[2020-06-10 00:42:11,089] [INFO] [run] master podname: 447820-0
+[2020-06-10 00:42:11,089] [INFO] [run] master relay: 
+[2020-06-10 00:42:11,089] [INFO] [run] hostnamesuffix: None
+[2020-06-10 00:42:11,089] [INFO] [run] ---------------
+[2020-06-10 00:42:11,089] [INFO] [run] 
+=== ordenv: version 4.2 ===
+=== ordenv: master/default ===
+=== ordenv: system/init ===
+=== ordenv: system/site ===
+=== ordenv: sourcing site:20191220 ===
+info: jobctl cell (gpsc1.science.gc.ca)
+=== ordenv: system/comm ===
+=== ordenv: skipping comm ===
+=== ordenv: system/group ===
+=== ordenv: skipping group ===
+=== ordenv: system/user ===
+=== ordenv: completed ===
+Wed Jun 10 00:42:15 UTC 2020
+#runs="`wc -l < track/behav_table`";\
+	#while [[ $runs -gt 0 ]] ; do\
+	#	echo 'verifying runs...';\
+	#	Rscript verify.R;\
+	#	runs="`wc -l < track/behav_table`";\
+	#done
+Rscript verify.R;
+[1] "Verified: 2013_10_22_2014_5_10_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "all runs complete!"
+make[1]: Entering directory `/fs/vnas_Hdfo/bioios/dar002/SRA_ballast_water_particle_tracking'
+_now=$(date +"%m_%d_%Y");\
+	_file="output_$_now.tar.gz";\
+	tar -zcf $_file /fs/isi-nas1/dfo/bioios/dfo_bioios/dar002/OUTPUT/2009_1_1_2009_7_20_0_0_0_1_0.05_25_n_0_100_h/ ;\
+
+tar: Removing leading `/' from member names
+make[1]: Leaving directory `/fs/vnas_Hdfo/bioios/dar002/SRA_ballast_water_particle_tracking'
+Wed Jun 10 00:46:15 UTC 2020

@@ -1,3 +1,3 @@
        integer m,n
        real angle
-       parameter (m=197,n=234,angle=0.)
+       parameter (m=393,n=467,angle=0.)

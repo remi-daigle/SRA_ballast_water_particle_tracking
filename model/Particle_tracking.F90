@@ -4,7 +4,7 @@
       include 'ocean.h'
       integer  nDims, nVars, nGlobalAtts, unlimdimid
       integer fieldId,ncid,lonId,latId,timeId
-      integer uid, vid, wid,Tid,Sid
+      integer uid, vid, wid,Tid,Sid,Hid
       integer, allocatable :: dim(:), Time_stamp(:)
       integer st,i,j,k,it,it1,it2,layer,kd,kd_ini,ii
 !
@@ -39,8 +39,8 @@
       CALL get_command_argument(1,behaveparam)
 !-------------------------------------------------------------------------------------------
 !
-      open(99,file='../Run/bp/1_'//behaveparam)
-!      open(99,file='../Run/behav_param')
+      open(99,file='Run/bp/1_'//behaveparam)
+!      open(99,file='Run/behav_param')
       read(99,*)iyear1,imonth1,iday1,iyear2,imonth2,iday2,hour1,minute1,second1,swim,sv,Kdiff,behav,uzl,lzl,modelres
       print*,'iyear1,imonth1,iday1=',iyear1,imonth1,iday1,hour1,minute1,second1
       print*,'iyear2,imonth2,iday2=',iyear2,imonth2,iday2
@@ -54,7 +54,7 @@
       call zeros !initialize arrays to zero
 !
       if(modelres.eq."l") time_between_frames=24*3600.  !we are assuming daily output from model. Results won't be accurate otherwise
-      if(modelres.eq."h") time_between_frames=3*3600.
+      if(modelres.eq."h") time_between_frames=2*3600.
       initial=1   !first kstep of the run
       dt=3600.
       kstep=-1
@@ -62,17 +62,14 @@
       print*,"nloop=", nloop
 !
 !
-!      open(1,file='data/depth.dat',status='old')
+!      open(1,file='Run/data/depth.dat',status='old')
 !      do i=1,m
 !         read(1,*) (izet(i,j),j=1,n)
 !      enddo
 !      close(1)
 
-      if(modelres.eq."l") then
-      	open(1,file='data/depth.dat',status='old')
-      else
-      	open(1,file='../HighRes/depth_for_Remi.dat',status='old')
-      end if 
+      
+      open(1,file='Run/data/depth.dat',status='old')
       do i=1,m
          read(1,*) (rzet(i,j),j=1,n)
          do j=1,n
@@ -82,34 +79,67 @@
       close(1)
 !
 !      To fix the problem with the date in opa
-       if(modelres.eq."l") then
-       	print*,"Warning: cday2 is called with a reference day of April 30, 2005"
-        call cday2(30,4,2005,kd_ini)
-       end if
-       if(modelres.eq."h".AND.iyear1.eq.2008) then
-       	print*,"Warning: cday2 is called with a reference day of June 30, 2008"
-        call cday2(30,6,2008,kd_ini)
-       end if
-       if(modelres.eq."h".AND.iyear1.eq.2009) then
-       	print*,"Warning: cday2 is called with a reference day of June 30, 2009"
-        call cday2(30,6,2009,kd_ini)
-       end if
-       if(modelres.eq."h".AND.iyear1.eq.2010) then
-       	print*,"Warning: cday2 is called with a reference day of June 30, 2010"
-        call cday2(30,6,2010,kd_ini)
-       end if
-       if(modelres.eq."h".AND.iyear1.eq.2011) then
-       	print*,"Warning: cday2 is called with a reference day of June 30, 2011"
-        call cday2(30,6,2011,kd_ini)
-       end if
+      if(iyear1.eq.2006) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2006"
+       call cday2(1,1,2006,kd_ini)
+      end if
+      if(iyear1.eq.2007) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2007"
+       call cday2(1,1,2007,kd_ini)
+      end if
+      if(iyear1.eq.2008) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2008"
+       call cday2(1,1,2008,kd_ini)
+      end if
+      if(iyear1.eq.2009) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2009"
+       call cday2(1,1,2009,kd_ini)
+      end if
+      if(iyear1.eq.2010) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2010"
+       call cday2(1,1,2010,kd_ini)
+      end if
+      if(iyear1.eq.2011) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2011"
+       call cday2(1,1,2011,kd_ini)
+      end if
+      if(iyear1.eq.2012) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2012"
+       call cday2(1,1,2012,kd_ini)
+      end if
+      if(iyear1.eq.2013) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2013"
+       call cday2(1,1,2013,kd_ini)
+      end if
+      if(iyear1.eq.2014) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2014"
+       call cday2(1,1,2014,kd_ini)
+      end if
+      if(iyear1.eq.2015) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2015"
+       call cday2(1,1,2015,kd_ini)
+      end if
+      if(iyear1.eq.2016) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2016"
+       call cday2(1,1,2016,kd_ini)
+      end if
+      if(iyear1.eq.2017) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2017"
+       call cday2(1,1,2017,kd_ini)
+      end if      
+      if(iyear1.eq.2018) then
+            print*,"Warning: cday2 is called with a reference day of January 1, 2018"
+       call cday2(1,1,2018,kd_ini)
+      end if
+      
        print*,"kd_ini=",kd_ini
 !
-!get   the first and last record to average
+!get   the first and last record to average (add 1 day in the end to get enough records)
        call cday2(iday1,imonth1,iyear1,istart)
        istart=istart-kd_ini       
 !
        call cday2(iday2,imonth2,iyear2,iend)
-       iend=iend-kd_ini
+       iend=iend-kd_ini+1
 !
        
 !
@@ -119,11 +149,24 @@
        print*,'final=',final
 !-------------------------------------------------------------------------------------------
 !   Open NETCDF file
-        if(modelres.eq."l") st=nf90_open('/globalscratch/rdaigle/L_2012_M2_ave_TSUV.nc',nf90_share,ncid)
-        if(modelres.eq."h".AND.iyear1.eq.2008) st=nf90_open('../HighRes/R2008s_ave_TSUV.nc',nf90_share,ncid)
-        if(modelres.eq."h".AND.iyear1.eq.2009) st=nf90_open('../HighRes/R2009s_ave_TSUV.nc',nf90_share,ncid)
-        if(modelres.eq."h".AND.iyear1.eq.2010) st=nf90_open('../HighRes/R2010s_ave_TSUV.nc',nf90_share,ncid)
-        if(modelres.eq."h".AND.iyear1.eq.2011) st=nf90_open('../HighRes/R2010s_ave_TSUV.nc',nf90_share,ncid)
+!        if(modelres.eq."l") st=nf90_open('/globalscratch/rdaigle/L_2012_M2_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."h".AND.iyear1.eq.2009) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_HF_2009_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."h".AND.iyear1.eq.2011) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_HF_2011_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."h".AND.iyear1.eq.2013) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_HF_2013_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2006) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2006_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2007) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2007_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2008) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2008_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2009) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2009_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2010) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2010_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2011) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2011_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2012) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2012_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2013) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2013_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2014) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2014_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2015) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2015_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2016) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2016_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2017) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2017_ave_TSUV.nc',nf90_share,ncid)
+        if(modelres.eq."l".AND.iyear1.eq.2018) st=nf90_open('/fs/hnas1-evs1/Ddfo/dfo_odis/joc001/Invasives/CMC_2018_ave_TSUV.nc',nf90_share,ncid)
+        
 !-----------------------------------------------------------------------
       st = nf90_inquire(ncid, nDims, nVars, nGlobalAtts, unlimdimid)
       if(st.ne.0) stop 'Problems opening netcdf file'
@@ -197,11 +240,7 @@
 !-------------------------------------------------------------------------------------------
 !-------------------------------------------------------------------------------------------
 ! Read in nlayer
-      if(modelres.eq."l") then
-      	open(11,file='../Run/data/bathy_level2.dat', status='old')
-      else
-      	open(11,file='../HighRes/bathy_level_for_Remi.dat', status='old')
-      end if
+      open(11,file='Run/data/bathy_level_for_Remi.dat', status='old')
       do i=1,m
           read(11,*)( nlayer(i,j),j=1,n)
       enddo
@@ -228,20 +267,25 @@
       write(*,*)"3d field Id for w",wId
      
 !Get the id for temp
-      st=nf90_inq_varid(ncid,"votemper",TId)
-      write(*,*)"3d field Id for temp",TId
+!      st=nf90_inq_varid(ncid,"votemper",TId)
+!      write(*,*)"3d field Id for temp",TId
      
 !Get the id for salt
-      st=nf90_inq_varid(ncid,"vosaline",SId)
-      write(*,*)"3d field Id for salt",SId
+!      st=nf90_inq_varid(ncid,"vosaline",SId)
+!      write(*,*)"3d field Id for salt",SId
+
+!Get the id for Sea Surface Height
+!      st=nf90_inq_varid(ncid,"sossheig",HId)
+!      write(*,*)"2d field Id for height",HId
 
       
 
-      if(modelres.eq."h") then
-         mloop=8
-      else
-         mloop=1
-      endif
+!      if(modelres.eq."h") then
+         mloop=12
+!      else
+!         mloop=1
+!      endif
+      print*,'mloop test',3600.*24./dt
 
 !-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
@@ -252,8 +296,10 @@
 
 !
 !          get right time
+!           print*,'kd_ini',kd_ini
+!           print*,'it',it
 !           if(modelres.eq."h") then
-!            kd=int(kd_ini+floor(it/8.))
+!            kd=int(kd_ini+floor(it/12.))
 !            print*,'kd',kd
 !           else
             kd=kd_ini+it ! Assuming daily output
@@ -264,34 +310,34 @@
            time_in(1)=second1
            write(*,'(a,6(1x,i4))')'time_in: year, month, day, hour, min, sec = ',(time_in(ii),ii=6,1,-1)
 !intermediate time loop
-      DO it1=1,mloop         
+      DO it1=1,mloop
+!          print*,'it1=',it1         
           if(it.eq.istart.and.it1.eq.1) then
                tzero=time_in !array
                time=time_in !array
                call particle_input
-               lobster=.FALSE.
-               if(behav.eq.'l0a'.or.behav.eq.'l1a'.or.behav.eq.'l2a'.or.behav.eq.'l3a'.or.behav.eq.'l4a'.or.&
-               behav.eq.'l0b'.or.behav.eq.'l1b'.or.behav.eq.'l2b'.or.behav.eq.'l3b'.or.behav.eq.'l4b') lobster=.TRUE. 
           endif  
 !     Output file 
 !
            st=nf90_get_var(ncid,uId,u1,start=(/1,1,1,(((it-1)*mloop)+it1)/)) 
            st=nf90_get_var(ncid,vId,v1,start=(/1,1,1,(((it-1)*mloop)+it1)/)) 
            st=nf90_get_var(ncid,wId,w1,start=(/1,1,1,(((it-1)*mloop)+it1)/)) 
-           st=nf90_get_var(ncid,TId,temp1,start=(/1,1,1,(((it-1)*mloop)+it1)/)) 
-           st=nf90_get_var(ncid,SId,salt1,start=(/1,1,1,(((it-1)*mloop)+it1)/)) 
+!           st=nf90_get_var(ncid,TId,temp1,start=(/1,1,1,(((it-1)*mloop)+it1)/)) 
+!           st=nf90_get_var(ncid,SId,salt1,start=(/1,1,1,(((it-1)*mloop)+it1)/))
+!           st=nf90_get_var(ncid,HId,height1,start=(/1,1,1,(((it-1)*mloop)+it1)/)) 
            st=nf90_get_var(ncid,uId,u2,start=(/1,1,1,(((it-1)*mloop)+it1)+1/)) 
            st=nf90_get_var(ncid,vId,v2,start=(/1,1,1,(((it-1)*mloop)+it1)+1/)) 
            st=nf90_get_var(ncid,wId,w2,start=(/1,1,1,(((it-1)*mloop)+it1)+1/)) 
-           st=nf90_get_var(ncid,TId,temp2,start=(/1,1,1,(((it-1)*mloop)+it1)+1/)) 
-           st=nf90_get_var(ncid,SId,salt2,start=(/1,1,1,(((it-1)*mloop)+it1)+1/))
+!           st=nf90_get_var(ncid,TId,temp2,start=(/1,1,1,(((it-1)*mloop)+it1)+1/)) 
+!           st=nf90_get_var(ncid,SId,salt2,start=(/1,1,1,(((it-1)*mloop)+it1)+1/))
+!           st=nf90_get_var(ncid,HId,height2,start=(/1,1,1,(((it-1)*mloop)+it1)+1/))
            !print*,'test mloop',(((it-1)*mloop)+it1)
 
 !-------------------------------------------------------------------------------------------
 !small loop
 !-------------------------------------------------------------------------------------------
        do it2=0,nloop-1
-          print*,'it2=',it2
+!          print*,'it2=',it2
 !
            kstep=kstep+1
            call update(kstep)  !updating time array
@@ -300,8 +346,9 @@
            u=u1+it2*(u2-u1)/nloop              !Arrays manipulation, linear interpolation
            v=v1+it2*(v2-v1)/nloop              !Arrays manipulation, linear interpolation
            w=w1+it2*(w2-w1)/nloop              !Arrays manipulation, linear interpolation
-           temp=temp1+it2*(temp2-temp1)/nloop  !Arrays manipulation, linear interpolation
-           salt=salt1+it2*(salt2-salt1)/nloop  !Arrays manipulation, linear interpolation
+!           temp=temp1+it2*(temp2-temp1)/nloop  !Arrays manipulation, linear interpolation
+!           salt=salt1+it2*(salt2-salt1)/nloop  !Arrays manipulation, linear interpolation
+!           height=height2-height1  !Arrays manipulation, linear interpolation
 !
                  i=106;j=160;k=1
                  !print*,'u,v,w,t,s at j,i,k=',j,i,k
@@ -355,13 +402,13 @@
 !-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
 !   Open NETCDF file
-      open(99,file='../Run/bp/1_'//behaveparam)
+      open(99,file='Run/bp/1_'//behaveparam)
       read(99,*)iyear1,imonth1,iday1,iyear2,imonth2,iday2,hour1,minute1,second1,swim,sv,Kdiff,behav,uzl,lzl,modelres
       close(99)
       if(modelres.eq."l") then
-      	st=nf90_open('../Run/data/coordinates.nc',nf90_share,ncid)
+      	st=nf90_open('Run/data/coordinates.nc',nf90_share,ncid)
       else
-      	st=nf90_open('../HighRes/coordinates.nc',nf90_share,ncid)
+      	st=nf90_open('Run/data/coordinates.nc',nf90_share,ncid)
       end if
 !-----------------------------------------------------------------------
       st = nf90_inquire(ncid, nDims, nVars, nGlobalAtts, unlimdimid)

@@ -1,29 +1,33 @@
       include 'parameter.h'
       character*80 titre,colormap,anumb
       character*25 file,nom
-      PARAMETER(MPART=150000)
-      PARAMETER(MSTEP=1000)
+      PARAMETER(MPART=50000)
+      PARAMETER(MSTEP=3000)
       INTEGER IPOINT(MPART)
       REAL XP(MPART,MSTEP)
       REAL YP(MPART,MSTEP),ZP(MPART,MSTEP)
       REAL xmean,ymean,zmean,x,y,z,stage
       INTEGER icount,i,id
       real depth(m,n)
-      character*180 filenom,clon,archive,filepath
+      character*180 filenom,clon,archive,filepath,storage
       character*180 bp
 
       CALL get_command_argument(1,bp)
-      open(98,file='../Run/bp/2_'//bp)
+      open(98,file='Run/bp/2_'//bp)
       read(98,*)filepath
-      filepath=TRIM('tmp/'//filepath)
+      storage='/fs/isi-nas1/dfo/bioios/dfo_bioios/dar002/'
+      filepath=TRIM(storage)//'OUTPUT/'//TRIM(filepath)
 c
 c---------------------------------------------------------------------
 c 
       call getarg(1,archive)
       print*,'archive=',archive
+      print*,bp
+      print*,filepath
 c-----------------------------------------------------------------------
       !filenom=archive(1:lenstr(archive))//'.output_particles'
-      filenom='../Run/OUT/'//bp
+      filenom=TRIM(storage)//'RAW/'//TRIM(bp)
+      print*,filenom
       OPEN(10,FILE=filenom,form='unformatted',status='old')
       
       do ii = 1, mpart
@@ -50,6 +54,7 @@ c-----------------------------------------------------------------------
 c
       Do i=1,imax,1
         call nb_char(i,anumb)
+        print*,TRIM(filepath)//'/track'//anumb(1:lenstr(anumb))
         open(11,file=TRIM(filepath)//'/track'//anumb(1:lenstr(anumb)))
         do iout=1,ipoint(i),1
             call xy_to_ll_NEMO(xp(i,iout),yp(i,iout),rlon,rlat)

@@ -1,0 +1,16 @@
+jobid |jobname                                     |jobstate|username|groupname |nslots|queuename|hostname        
+------|--------------------------------------------|--------|--------|----------|------|---------|----------------
+447787|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05
+447793|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05
+447794|particles_2011_11_19_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05
+447796|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05
+447797|particles_2011_11_19_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05
+447799|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05
+447803|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05
+447809|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05
+447811|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1mm42-be16
+447813|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc2nn42-be04
+447815|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1mm42-be16
+447817|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be15
+447819|particles_2013_10_22_0.1_0.05_25_t_0_100.job|r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05
+447820|verify.job                                  |r       |dar002  |dfo_bioios|1     |dev-be-6h|ib7-bc1jj42-be05

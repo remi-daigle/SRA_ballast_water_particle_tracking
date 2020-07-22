@@ -32,9 +32,9 @@
 !
       common /com1/u,v,w,u1,u2,v1,v2,w1,w2
       common /com2/za
-      real temp(m,n,ilo),salt(m,n,ilo),temp1(m,n,ilo),salt1(m,n,ilo),temp2(m,n,ilo),salt2(m,n,ilo)
+      real temp(m,n,ilo),salt(m,n,ilo),temp1(m,n,ilo),salt1(m,n,ilo),temp2(m,n,ilo),salt2(m,n,ilo),height(m,n),height1(m,n),height2(m,n)
       real mid_depth(ilo)
-      common /com5/temp,salt,temp1,temp2,salt1,salt2,mid_depth
+      common /com5/temp,salt,temp1,temp2,salt1,salt2,height,height1,height2,mid_depth
 !-----------------------------------------------------------------------
 !-----------topography expanding/contracting variables-----------------
       integer*2 ldep(m,n), nlayer(m,n), jc(m,n)

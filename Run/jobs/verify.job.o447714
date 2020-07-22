@@ -1,0 +1,76 @@
+[2020-06-09 19:43:55,582] [INFO] [run] job information
+[2020-06-09 19:43:55,582] [INFO] [run] ---------------
+[2020-06-09 19:43:55,582] [INFO] [run] jobid: 447714
+[2020-06-09 19:43:55,582] [INFO] [run] nslots: 1
+[2020-06-09 19:43:55,582] [INFO] [run] ncpus[0]: 1
+[2020-06-09 19:43:55,582] [INFO] [run] memory[0]: 8388608000
+[2020-06-09 19:43:55,582] [INFO] [run] tmpfs[0]: 4194304000
+[2020-06-09 19:43:55,582] [INFO] [run] image[0]: dfo/dfo_all_grdi_centos-6-amd64_latest
+[2020-06-09 19:43:55,582] [INFO] [run] wallclock: 21480
+[2020-06-09 19:43:55,582] [INFO] [run] master podname: 447714-0
+[2020-06-09 19:43:55,582] [INFO] [run] master relay: 
+[2020-06-09 19:43:55,582] [INFO] [run] hostnamesuffix: None
+[2020-06-09 19:43:55,582] [INFO] [run] ---------------
+[2020-06-09 19:43:55,582] [INFO] [run] 
+=== ordenv: version 4.2 ===
+=== ordenv: master/default ===
+=== ordenv: system/init ===
+=== ordenv: system/site ===
+=== ordenv: sourcing site:20191220 ===
+info: jobctl cell (gpsc1.science.gc.ca)
+=== ordenv: system/comm ===
+=== ordenv: skipping comm ===
+=== ordenv: system/group ===
+=== ordenv: skipping group ===
+=== ordenv: system/user ===
+=== ordenv: completed ===
+Tue Jun  9 19:43:59 UTC 2020
+#runs="`wc -l < track/behav_table`";\
+	#while [[ $runs -gt 0 ]] ; do\
+	#	echo 'verifying runs...';\
+	#	Rscript verify.R;\
+	#	runs="`wc -l < track/behav_table`";\
+	#done
+Rscript verify.R;
+[1] "Missing file: 2013_7_2_2014_1_18_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2011_7_16_2012_2_1_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2009_8_13_2010_3_1_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2011_10_8_2012_4_25_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2013_10_22_2014_5_10_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2011_11_19_2012_6_6_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2013_11_19_2014_6_7_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2009_12_3_2010_6_21_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Verified: 2013_12_31_2014_7_19_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+warning: "-N" option has already been set, overriding previous setting
+Your job 447759 ("verify.job") has been submitted
+Error: 
+Execution halted
+make: *** [verify] Error 1
+Tue Jun  9 20:44:20 UTC 2020

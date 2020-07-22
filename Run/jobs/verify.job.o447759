@@ -1,0 +1,83 @@
+[2020-06-09 20:44:56,059] [INFO] [run] job information
+[2020-06-09 20:44:56,059] [INFO] [run] ---------------
+[2020-06-09 20:44:56,059] [INFO] [run] jobid: 447759
+[2020-06-09 20:44:56,060] [INFO] [run] nslots: 1
+[2020-06-09 20:44:56,060] [INFO] [run] ncpus[0]: 1
+[2020-06-09 20:44:56,060] [INFO] [run] memory[0]: 8388608000
+[2020-06-09 20:44:56,060] [INFO] [run] tmpfs[0]: 4194304000
+[2020-06-09 20:44:56,060] [INFO] [run] image[0]: dfo/dfo_all_grdi_centos-6-amd64_latest
+[2020-06-09 20:44:56,060] [INFO] [run] wallclock: 21480
+[2020-06-09 20:44:56,060] [INFO] [run] master podname: 447759-0
+[2020-06-09 20:44:56,060] [INFO] [run] master relay: 
+[2020-06-09 20:44:56,060] [INFO] [run] hostnamesuffix: None
+[2020-06-09 20:44:56,060] [INFO] [run] ---------------
+[2020-06-09 20:44:56,060] [INFO] [run] 
+=== ordenv: version 4.2 ===
+=== ordenv: master/default ===
+=== ordenv: system/init ===
+=== ordenv: system/site ===
+=== ordenv: sourcing site:20191220 ===
+info: jobctl cell (gpsc1.science.gc.ca)
+=== ordenv: system/comm ===
+=== ordenv: skipping comm ===
+=== ordenv: system/group ===
+=== ordenv: skipping group ===
+=== ordenv: system/user ===
+=== ordenv: completed ===
+Tue Jun  9 20:45:00 UTC 2020
+#runs="`wc -l < track/behav_table`";\
+	#while [[ $runs -gt 0 ]] ; do\
+	#	echo 'verifying runs...';\
+	#	Rscript verify.R;\
+	#	runs="`wc -l < track/behav_table`";\
+	#done
+Rscript verify.R;
+[1] "Verified: 2013_7_2_2014_1_18_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Verified: 2011_7_16_2012_2_1_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2009_8_13_2010_3_1_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2011_10_8_2012_4_25_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2013_10_22_2014_5_10_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2011_11_19_2012_6_6_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2013_11_19_2014_6_7_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Missing file: 2009_12_3_2010_6_21_0_0_0_0.1_0.05_25_t_0_100_h"
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "Jobs (>5) are still running..."
+[1] "resubmitting runs loop..."
+make[1]: Entering directory `/fs/vnas_Hdfo/bioios/dar002/SRA_ballast_water_particle_tracking'
+while read -r line; do\
+		while read -r yr1 m1 d1 yr2 m2 d2 h1 min1 s1 swim sv Kdiff behav uzl lzl modelrez; do\
+			fn=$(sed 's/ /_/g' <<< "$yr1 $m1 $d1 $swim $sv $Kdiff $behav $uzl $lzl");\
+		done <<< $line;\
+		echo $line > "Run/bp/1_"$fn;\
+		echo $(sed 's/ /_/g' <<< $line) > "Run/bp/2_"$fn;\
+		echo $fn > "Run/bp/3_"$fn;\
+		cp ../tmp/quickstart/template.job ../tmp/quickstart/particles_$fn.job;\
+		sed -i "s/template/$fn/g" ../tmp/quickstart/particles_$fn.job;\
+		Rscript submit.R $fn;\
+	done < track/behav_table;\
+	jobsub ~/tmp/quickstart/verify.job
+warning: "-N" option has already been set, overriding previous setting
+Your job 447761 ("particles_2009_8_13_0.1_0.05_25_t_0_100.job") has been submitted
+warning: "-N" option has already been set, overriding previous setting
+Your job 447762 ("particles_2011_10_8_0.1_0.05_25_t_0_100.job") has been submitted
+warning: "-N" option has already been set, overriding previous setting
+Your job 447763 ("particles_2013_10_22_0.1_0.05_25_t_0_100.job") has been submitted
+warning: "-N" option has already been set, overriding previous setting
+Your job 447764 ("particles_2011_11_19_0.1_0.05_25_t_0_100.job") has been submitted
+warning: "-N" option has already been set, overriding previous setting
+Your job 447765 ("particles_2013_11_19_0.1_0.05_25_t_0_100.job") has been submitted
+warning: "-N" option has already been set, overriding previous setting
+Your job 447766 ("particles_2009_12_3_0.1_0.05_25_t_0_100.job") has been submitted
+warning: "-N" option has already been set, overriding previous setting
+Your job 447767 ("verify.job") has been submitted
+make[1]: Leaving directory `/fs/vnas_Hdfo/bioios/dar002/SRA_ballast_water_particle_tracking'
+Tue Jun  9 21:13:42 UTC 2020

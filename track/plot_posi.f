@@ -13,7 +13,7 @@
 c 
 c---------------------------------------------------------------------
 c 
-      OPEN(10,FILE= '../Run/OUT/output_particles',form='unformatted',
+      OPEN(10,FILE= 'Run/OUT/output_particles',form='unformatted',
      >status='old')
       
  

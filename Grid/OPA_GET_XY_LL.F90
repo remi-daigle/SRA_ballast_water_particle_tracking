@@ -210,29 +210,9 @@ MODULE OPA_GET_XY_LL
 
 SUBROUTINE opa_proj_init 
       IMPLICIT NONE
-      integer iyear1,imonth1,iday1
-      integer iyear2,imonth2,iday2
-      real swim,sv,Kdiff
-      integer hour1,minute1,second1
-      integer uzl,lzl
-      character*1 modelres
-      character*2 behav
-      character*50 behaveparam
-!
-      CALL get_command_argument(1,behaveparam)
-   
-!      open(4,file='../Run/bp/behav_param')
-      open(77,file='../Run/bp/1_'//behaveparam)
-      read(77,*)iyear1,imonth1,iday1,iyear2,imonth2,iday2,hour1,minute1,second1,swim,sv,Kdiff,behav,uzl,lzl,modelres
-      close(77)
-      if(modelres.eq."l") then
-      	COORD_FILE='../Run/data/coordinates.nc'
-        print*,'test - using low rez'
-      else
-      	COORD_FILE='../HighRes/coordinates.nc'
-        print*,'test - using high rez'
-      end if
-          !COORD_FILE='coordinates.nc'
+          
+
+          COORD_FILE='Run/data/coordinates.nc'
           !WRITE(0,*) "COORD_FILE:  ", COORD_FILE
           !print*,'lon00,lat00=',lon00,lat00
         

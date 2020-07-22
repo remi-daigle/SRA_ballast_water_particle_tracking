@@ -35,6 +35,9 @@
       za = 0.0   !Table
       ldep = 0   !Table
       nlayer = 0   !Table
+      height = 0   !Table
+      height1 = 0   !Table
+      height2 = 0   !Table
 !-----------------------------------------------------------------------
       return
       end

@@ -1,0 +1,119 @@
+[2020-06-07 22:23:52,232] [INFO] [run] job information
+[2020-06-07 22:23:52,232] [INFO] [run] ---------------
+[2020-06-07 22:23:52,232] [INFO] [run] jobid: 446118
+[2020-06-07 22:23:52,232] [INFO] [run] nslots: 1
+[2020-06-07 22:23:52,232] [INFO] [run] ncpus[0]: 1
+[2020-06-07 22:23:52,232] [INFO] [run] memory[0]: 8388608000
+[2020-06-07 22:23:52,232] [INFO] [run] tmpfs[0]: 4194304000
+[2020-06-07 22:23:52,232] [INFO] [run] image[0]: dfo/dfo_all_grdi_centos-6-amd64_latest
+[2020-06-07 22:23:52,232] [INFO] [run] wallclock: 21480
+[2020-06-07 22:23:52,232] [INFO] [run] master podname: 446118-0
+[2020-06-07 22:23:52,233] [INFO] [run] master relay: 
+[2020-06-07 22:23:52,233] [INFO] [run] hostnamesuffix: None
+[2020-06-07 22:23:52,233] [INFO] [run] ---------------
+[2020-06-07 22:23:52,233] [INFO] [run] 
+=== ordenv: version 4.2 ===
+=== ordenv: master/default ===
+=== ordenv: system/init ===
+=== ordenv: system/site ===
+=== ordenv: sourcing site:20191220 ===
+info: jobctl cell (gpsc1.science.gc.ca)
+=== ordenv: system/comm ===
+=== ordenv: skipping comm ===
+=== ordenv: system/group ===
+=== ordenv: skipping group ===
+=== ordenv: system/user ===
+=== ordenv: completed ===
+Sun Jun  7 22:23:56 UTC 2020
+/home/dar002/SRA_ballast_water_particle_tracking
+Making input for 2011_7_2_0.1_0.05_25_d_0_100
+Running particle tracking for 2011_7_2_0.1_0.05_25_d_0_100
+ iyear1,imonth1,iday1=        2011           7           2           0
+           0           0
+ iyear2,imonth2,iday2=        2012           1          18
+ swim,sv,Kdiff,behav,uzl,lzl,modelres=  0.1000000      5.0000001E-02
+   25.00000     d             0         100 h
+ nloop=           2
+ Warning: cday2 is called with a reference day of January 1, 2011
+ kd_ini=      734504
+ istart=         182
+ iend=         383
+ final=         402
+ st=           0
+ nDims, nVars, nGlobalAtts, unlimdimid=           5          17           5
+           1
+ i,Dim_name(i),dim(i)=           1 time_counter                6780
+ i,Dim_name(i),dim(i)=           2 depthu                        46
+ i,Dim_name(i),dim(i)=           3 y                            467
+ i,Dim_name(i),dim(i)=           4 x                            393
+ i,Dim_name(i),dim(i)=           5 depthw                        46
+ mpass,npass,ilopass=         393         467          46
+ Number of outputs in file: (nb_time)=        6780
+ nav_lon nav_lat ids           1           2
+ st=           0
+ nDims, nVars, nGlobalAtts, unlimdimid=           4          21           0
+          -1
+ i,Dim_name(i),dim(i)=           1 x                            393
+ i,Dim_name(i),dim(i)=           2 y                            467
+ i,Dim_name(i),dim(i)=           3 z                              1
+ i,Dim_name(i),dim(i)=           4 time                           1
+ m,n,ilo=         393         467           1
+ up_depth=  0.0000000E+00   6.194214       12.83942       20.04541    
+   27.94818       36.71558       46.55402       57.71667       70.51294    
+   85.31873       102.5862       122.8574       146.7727       175.0809    
+   208.6421       248.4254       295.4971       350.9944       416.0859    
+   491.9158       579.5347       679.8276       793.4390       920.7183    
+   1061.686       1216.030       1383.139       1562.154       1752.040    
+   1951.660       2159.845       2375.452       2597.404       2824.719    
+   3056.525       3292.059       3530.668       3771.800       4014.990    
+   4259.855       4506.080       4753.402       5001.612       5250.537    
+   5500.037       5750.000    
+ mid_depth=   3.097107       9.516815       16.44241       23.99680    
+   32.33188       41.63480       52.13535       64.11481       77.91583    
+   93.95245       112.7218       134.8151       160.9268       191.8615    
+   228.5338       271.9612       323.2457       383.5402       454.0009    
+   535.7252       629.6812       736.6333       857.0786       991.2019    
+   1138.858       1299.584       1472.647       1657.097       1851.850    
+   2055.752       2267.648       2486.428       2711.062       2940.623    
+   3174.292       3411.364       3651.234       3893.395       4137.423    
+   4382.968       4629.741       4877.507       5126.074       5375.287    
+   5625.019       5875.082    
+ Time ids          15
+ 3d field Id for u           5
+ 3d field Id for v           7
+ 3d field Id for w          14
+ mloop test   24.00000    
+time_in: year, month, day, hour, min, sec =  2011    7    2    0    0    0
+forrtl: No space left on device
+forrtl: severe (30): open failure, unit 51, file /fs/isi-nas1/dfo/bioios/dfo_bioios/dar002/RAW/2011_7_2_0.1_0.05_25_d_0_100
+Image              PC                Routine            Line        Source             
+Particle_tracking  0000000000523D7C  Unknown               Unknown  Unknown
+Particle_tracking  000000000041296A  Unknown               Unknown  Unknown
+Particle_tracking  000000000041A3F1  Unknown               Unknown  Unknown
+Particle_tracking  0000000000411E86  Unknown               Unknown  Unknown
+libc.so.6          00002B27115BFD20  Unknown               Unknown  Unknown
+Particle_tracking  0000000000411D79  Unknown               Unknown  Unknown
+Reading tracks for 2011_7_2_0.1_0.05_25_d_0_100
+mkdir: cannot create directory `/fs/isi-nas1/dfo/bioios/dfo_bioios/dar002/OUTPUT/2011_7_2_2012_1_18_0_0_0_0.1_0.05_25_d_0_100_h': No space left on device
+ archive=
+ 2011_7_2_0.1_0.05_25_d_0_100                                                   
+                                                                                
+                       
+ 2011_7_2_0.1_0.05_25_d_0_100                                                   
+                                                                                
+                       
+ /fs/isi-nas1/dfo/bioios/dfo_bioios/dar002/OUTPUT/2011_7_2_2012_1_18_0_0_0_0.1_0
+ .05_25_d_0_100_h                                                               
+                       
+ /fs/isi-nas1/dfo/bioios/dfo_bioios/dar002/RAW/2011_7_2_0.1_0.05_25_d_0_100     
+                                                                                
+                       
+forrtl: No such file or directory
+forrtl: severe (29): file not found, unit 10, file /fs/isi-nas1/dfo/bioios/dfo_bioios/dar002/RAW/2011_7_2_0.1_0.05_25_d_0_100
+Image              PC                Routine            Line        Source             
+read_track.x       000000000051DF4C  Unknown               Unknown  Unknown
+read_track.x       000000000041608D  Unknown               Unknown  Unknown
+read_track.x       0000000000411A66  Unknown               Unknown  Unknown
+libc.so.6          00002B3D1B54CD20  Unknown               Unknown  Unknown
+read_track.x       0000000000411959  Unknown               Unknown  Unknown
+Sun Jun  7 22:24:28 UTC 2020

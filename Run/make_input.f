@@ -7,8 +7,8 @@
 !
       CALL get_command_argument(1,behaveparam)
    
-!      open(4,file='../Run/bp/behav_param')
-      open(4,file='../Run/bp/1_'//behaveparam)
+!      open(4,file='Run/bp/behav_param')
+      open(4,file='Run/bp/1_'//behaveparam)
       read(4,*)yr,mth,d,iyear2,imonth2,iday2,h,m,s,swim,sv,Kdiff,behav,uzl,lzl,modelres
 !      s = 0
 !      m = 0
@@ -17,19 +17,19 @@
 !      mth = 7
 !      yr = 2010
 !      z = 0 !use this if all at one depth
-      dt = 60*60*24*70
+      dt = 60*60*24*201
       stage=1.
 c
 c-----------------------------------------------------------------------
-      open(1,file='/home/rdaigle/track/part_loc.xy')
-      open(2,file='input_particles')
-      open(3,file='/home/rdaigle/track/z')
+      open(1,file='track/part_loc.xy')
+      open(2,file="Run/IN/input_"//behaveparam)
+      open(3,file='track/z')
 c   
 
       DO
         read(1,*,end=999)xp,yp,rlon,rlat
-      	read(3,*,end=999)z
-      	write(2,*)s,m,h+10,d,mth,yr,xp,yp,z,stage,dt
+        read(3,*,end=999)z
+        write(2,*)s,m,h+1,d,mth,yr,xp,yp,z,stage,dt
       endDO
 999   close(1)
       close(2)
